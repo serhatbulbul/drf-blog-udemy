@@ -7,6 +7,7 @@ from yazi.api.views import (
     YaziSilmeAPIView,
 )
 
+app_name = "yazi"
 urlpatterns = [
     path('listele', YaziListelemeAPIView.as_view(), name='listele'),
     path('detay/<slug>', YaziDetayAPIView.as_view(), name='detay'),

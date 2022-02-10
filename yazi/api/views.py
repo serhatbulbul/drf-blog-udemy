@@ -1,7 +1,14 @@
-from cgitb import lookup
-
-from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView
+from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+    RetrieveUpdateAPIView,
+    UpdateAPIView,
+)
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from yazi.api.paginations import YaziSayfalama
 
 # ozel izinler
 from yazi.api.permissions import SahibiMi
@@ -10,8 +17,15 @@ from yazi.models import Yazi
 
 
 class YaziListelemeAPIView(ListAPIView):  # dataların goruntulendiği yer
-    queryset = Yazi.objects.all()
+    # queryset = Yazi.objects.all() # hepsini görteriyor
     serializer_class = YaziSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['baslik']
+    pagination_class = YaziSayfalama
+
+    def get_queryset(self):
+        queryset = Yazi.objects.filter(taslak=False)
+        return queryset
 
 
 class YaziDetayAPIView(RetrieveAPIView):  # dataların detaylarının goruntulendiği yer
@@ -40,7 +54,6 @@ class YaziGuncellemeAPIView(RetrieveUpdateAPIView):  # retrieveupdate ile formla
 class YaziOlusturAPIView(CreateAPIView):
     queryset = Yazi.objects.all()
     serializer_class = YaziOlusturmaGuncellemeSerializer
-
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):

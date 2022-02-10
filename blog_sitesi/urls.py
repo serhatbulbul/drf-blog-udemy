@@ -11,5 +11,6 @@ def trigger_error(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/yazi/', include('yazi.api.urls', namespace='yazi')),
+    path('api/yorum/', include('yorum.api.urls', namespace='yorum')),
     path('sentry-debug/', trigger_error),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

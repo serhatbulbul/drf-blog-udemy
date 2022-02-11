@@ -1,12 +1,6 @@
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.generics import (
-    CreateAPIView,
-    DestroyAPIView,
-    ListAPIView,
-    RetrieveAPIView,
-    RetrieveUpdateAPIView,
-    UpdateAPIView,
-)
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView, UpdateAPIView
+from rest_framework.mixins import DestroyModelMixin
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from yazi.api.paginations import YaziSayfalama
 
@@ -34,14 +28,9 @@ class YaziDetayAPIView(RetrieveAPIView):  # dataların detaylarının goruntulen
     lookup_field = 'slug'
 
 
-class YaziSilmeAPIView(DestroyAPIView):
-    queryset = Yazi.objects.all()
-    serializer_class = YaziSerializer
-    lookup_field = 'slug'
-    permission_classes = [SahibiMi]
-
-
-class YaziGuncellemeAPIView(RetrieveUpdateAPIView):  # retrieveupdate ile formların içinde eski veriler görünüyor
+class YaziGuncellemeAPIView(
+    RetrieveUpdateAPIView, DestroyModelMixin
+):  # retrieveupdate ile formların içinde eski veriler görünüyor
     queryset = Yazi.objects.all()
     serializer_class = YaziOlusturmaGuncellemeSerializer
     lookup_field = 'slug'
@@ -49,6 +38,9 @@ class YaziGuncellemeAPIView(RetrieveUpdateAPIView):  # retrieveupdate ile formla
 
     def perform_update(self, serializer):
         serializer.save(duzenleyen_kullanici=self.request.user)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 class YaziOlusturAPIView(CreateAPIView):

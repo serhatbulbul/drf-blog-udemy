@@ -1,4 +1,5 @@
-from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.mixins import DestroyModelMixin
 from yorum.api.paginations import YorumSayfalama
 from yorum.api.permissions import SahibiMi
 from yorum.api.serializers import YorumListelemeSerializer, YorumOlusturmaSerializer, YorumSilmeGuncellemeSerializer
@@ -25,15 +26,11 @@ class YorumListelemeAPIView(ListAPIView):
         return queryset
 
 
-class YorumSilmeAPIView(DestroyAPIView):
+class YorumGuncellemeAPIView(UpdateAPIView, RetrieveAPIView, DestroyModelMixin):
     queryset = Yorum.objects.all()
     serializer_class = YorumSilmeGuncellemeSerializer
     lookup_field = 'pk'  # silme islemlerinde lookupfield kullanılır
     permission_classes = [SahibiMi]
 
-
-class YorumGuncellemeAPIView(UpdateAPIView):
-    queryset = Yorum.objects.all()
-    serializer_class = YorumSilmeGuncellemeSerializer
-    lookup_field = 'pk'  # silme islemlerinde lookupfield kullanılır
-    permission_classes = [SahibiMi]
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)

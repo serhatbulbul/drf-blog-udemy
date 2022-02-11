@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'yazi',
     'yorum',
+    'favori',
     'rest_framework',
 ]
 

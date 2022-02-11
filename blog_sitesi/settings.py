@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import sentry_sdk
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     'yazi',
     'yorum',
     'favori',
+    'account',
     'rest_framework',
 ]
 
@@ -143,3 +145,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'resim/yazi')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
+SIMPLE_JWT = {'ACCESS_TOKEN_LIFETIME': timedelta(minutes=55)}

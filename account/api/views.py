@@ -51,7 +51,7 @@ class UpdatePassword(APIView):
 
 # Create user
 class CreateUserView(CreateAPIView):
-    throttle_classes = [RegisterThrottle]
+    # throttle_classes = [RegisterThrottle]
     model = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [NotAuthenticated]

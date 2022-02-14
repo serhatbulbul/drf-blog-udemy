@@ -19,6 +19,9 @@ class Yazi(models.Model):
         User, on_delete=models.SET_NULL, null=True, related_name='duzenleyen_kullanici'
     )
 
+    class Meta:
+        ordering = ['-id']
+
     def get_slug(self):  # slug'i oluşturmak için kullanılır.
         slug = slugify(self.baslik.replace("ı", "i"))
         unique = slug
